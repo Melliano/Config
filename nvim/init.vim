@@ -17,6 +17,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'valloric/MatchTagAlways'
 Plug 'jiangmiao/auto-pairs'
 Plug 'ianks/vim-tsx'
+Plug 'diepm/vim-rest-console'
 call plug#end()
 let mapleader = ","
 let g:airline_powerline_fonts=1
@@ -49,10 +50,15 @@ autocmd FileType * nmap <silent> gd <Plug>(coc-definition)
 autocmd FileType * nmap <silent> gy <Plug>(coc-type-definition)
 autocmd FileType * nmap <silent> gi <Plug>(coc-implementation)
 autocmd FileType * nmap <silent> gr <Plug>(coc-references)
-autocmd FileType cs nnoremap <silent> gu :OmniSharpFindUsages<CR>
-autocmd FileType cs nnoremap <silent> gd :OmniSharpGotoDefinition<CR>
-autocmd FileType cs nnoremap <silent> gi :OmniSharpFindImplementations<CR>
-autocmd FileType cs nnoremap <silent> ga :OmniSharpGetCodeActions<CR>
+autocmd FileType cs nnoremap <silent> <Leader>gu :OmniSharpFindUsages<CR>
+autocmd FileType cs nnoremap <silent> <Leader>gd :OmniSharpGotoDefinition<CR>
+autocmd FileType cs nnoremap <silent> <Leader>gi :OmniSharpFindImplementations<CR>
+autocmd FileType cs nnoremap <silent> <Leader>ga :OmniSharpGetCodeActions<CR>
+autocmd FileType cs nnoremap <silent> <Leader>gk :OmniSharpDocumentation<CR>
+autocmd FileType cs nnoremap <silent> <Leader>rn :OmniSharpRename<CR>
+autocmd FileType cs nnoremap <silent> <Leader>ss :OmniSharpStartServer<CR>
+autocmd FileType cs nnoremap <silent> <Leader>sp :OmniSharpStopServer<CR>
+
 tnoremap <Esc> <C-\><C-n>
 tnoremap <C-h> <C-\><C-n><C-w>h
 tnoremap <C-j> <C-\><C-n><C-w>j
@@ -65,9 +71,16 @@ nnoremap <C-k> <C-\><C-n><C-w>k
 nnoremap <C-l> <C-\><C-n><C-w>l
 nnoremap <C-d> <C-d>zz
 nnoremap <C-u> <C-u>zz
+noremap dd "_dd
+noremap D "_D
+noremap d "_d
+noremap X "_X
+noremap x "_x
 nnoremap("N", "Nzzzv")
 nnoremap("n", "nzzzv")
-
+map <Leader>a :bprev<Return>
+map <Leader>s :bnext<Return>
+map <Leader>d :bd<Return>
 
 autocmd FileType ts nmap <silent> gd :call CocActionAsync('jumpDefinition')<CR>
 autocmd FileType html nmap <silent> gd :call CocActionAsync('jumpDefinition')<CR>
@@ -85,14 +98,14 @@ autocmd FileType html nmap <silent> gd :call CocActionAsync('jumpDefinition')<CR
 " use <tab> for trigger completion and navigate to the next complete item
 inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
 function! CheckBackspace() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
+let col = col('.') - 1
+return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
 inoremap <silent><expr> <Tab>
-      \ coc#pum#visible() ? coc#pum#next(1) :
-      \ CheckBackspace() ? "\<Tab>" :
-      \ coc#refresh()
+  \ coc#pum#visible() ? coc#pum#next(1) :
+  \ CheckBackspace() ? "\<Tab>" :
+  \ coc#refresh()
 nmap <leader>rn <Plug>(coc-rename)
 
 colorscheme gruvbox
@@ -144,7 +157,7 @@ function! s:show_documentation()
         call CocAction('doHover')
     endif
 endfunction
-let $FZF_DEFAULT_COMMAND='find . \( -name node_modules -o -name .git -o -name ios -o -name android\) -prune -o -print'
+let $FZF_DEFAULT_COMMAND='find . \( -name node_modules -o -name ios -o -name www -o -name android \) -prune -o -print'
 
 let g:ale_linters = { 
 \ 'cs' : ['OmniSharp'],
@@ -160,9 +173,9 @@ function! s:cocActionsOpenFromSelected(type) abort
   execute 'CocCommand actions.open ' . a:type
 endfunction
 xmap <silent> <leader>a :<C-u>execute 'CocCommand actions.open ' . visualmode()<CR>
-nmap <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
 let g:OmniSharp_server_use_net6 = 1
 let g:ale_fix_on_save = 1
 nmap <leader>ne :NERDTree<cr>
 map <C-p> :GFiles<cr>
 map <C-f> :Files<cr>
+filetype plugin on
